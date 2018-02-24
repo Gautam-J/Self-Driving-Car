@@ -1,5 +1,8 @@
 # NFS_v1
-This is the same as shown in a tutorial with no mods of my own.
+This is the same as shown in a tutorial with no mods of my own. 
+
+NOTE: NOT UPDATED.
+
 
 We first run main.py to capture the screen and input data.
 
