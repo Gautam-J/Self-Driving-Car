@@ -1,4 +1,5 @@
 # NFS_v1
+Hi, This is Gautam.
 This is the same as shown in a tutorial with no mods of my own. 
 
 NOTE: NOT UPDATED.
@@ -16,4 +17,4 @@ We have a new file - training_data_v2.npy
 
 We train our model using training_data_v2.npy
 
-We test our trained model.
+We test our trained model using test_model.py
