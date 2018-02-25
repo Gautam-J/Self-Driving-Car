@@ -1,10 +1,11 @@
 # Need For Speed_v1
-Hi, This is Gautam.
-This is the same as shown in a tutorial with no mods of my own. 
+Hi, This is Gautam. This project uses convolutional neural network to automatically drive a car in a game (in my case, Need For Speed)
 
-Run Need For Speed Most Wanted (old version) in a windowed mode with dimensions 50, 50, 800, 500.
+NOTE: This is the same as shown in a tutorial with no mods of my own. 
 
-Run Python scripts as numbered. Make sure your python IDLE/CMD is only on the left side of your screen.
+Run Need For Speed Most Wanted (old version) (or any game for that matter) in a windowed mode with dimensions 50, 50, 800, 500. (You could use DxWnd)
+
+Run Python scripts as numbered. Make sure your python IDLE/CMD is only on the right side of your screen.
 
 We run main.py to capture the screen and input data. Game needs to be open, and you need to play the game(how you want the neural network to play).
 
