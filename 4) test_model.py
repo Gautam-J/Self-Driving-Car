@@ -4,23 +4,25 @@ import time
 from grabscreen import grab_screen
 from getkeys import key_check
 from alexnet import alexnet
-import os
 from directkeys import PressKey, ReleaseKey, W, A, D
 
-WIDTH = 80
-HEIGHT = 60
-LR = 1e-3
-EPOCHS = 8
-MODEL_NAME = 'nfs-car-{}-{}-{}-epochs.model'.format(LR, 'alexnetv2', EPOCHS)
+'''
+Run this script to test your model in your game in real time. Make sure you
+select your game window after initiating this script.
+'''
+
+MODEL_NAME = 'nfs-final.model'
 
 
 def straight():
+    print('straight')
     PressKey(W)
     ReleaseKey(A)
     ReleaseKey(D)
 
 
 def left():
+    print('left')
     PressKey(W)
     PressKey(A)
     time.sleep(0.09)
@@ -28,56 +30,55 @@ def left():
 
 
 def right():
+    print('right')
     PressKey(W)
     PressKey(D)
     time.sleep(0.09)
     ReleaseKey(D)
 
 
-model = alexnet(WIDTH, HEIGHT, LR)
+model = alexnet(width=86, height=56, output=3, channel=1, lr=0.001)
 model.load(MODEL_NAME)
+print('Model Loaded!')
 
 
 def main():
-    for i in list(range(4))[::-1]:
+    for i in list(range(5))[::-1]:
         print(i + 1)
         time.sleep(1)
-        # print(len(training_data))
 
-    last_time = time.time()
     paused = False
     while True:
+
         if not paused:
-            screen = grab_screen(region=(40, 12, 860, 560))
+            screen = grab_screen(region=(40, 250, 860, 560))
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-            screen = cv2.resize(screen, (80, 60))
+            screen = cv2.resize(screen, (86, 56))
 
-            print('Frame took {} seconds'.format(time.time() - last_time))
-            last_time = time.time()
+            prediction = model.predict([screen.reshape(86, 56, 1)])[0]
+            prediction = np.array(prediction) * [0.009, 5, 0.009]
 
-            prediction = model.predict([screen.reshape(WIDTH, HEIGHT, 1)])[0]
-            moves = list(np.around(prediction))
-            print(moves, prediction)
-
-            if moves == [1, 0, 0]:
+            if np.argmax(prediction) == 0:
                 left()
-            elif moves == [0, 1, 0]:
+            elif np.argmax(prediction) == 1:
                 straight()
-            elif moves == [0, 0, 1]:
+            elif np.argmax(prediction) == 2:
                 right()
 
-            keys = key_check()
+        keys = key_check()
 
-            if 'T' in keys:
-                if paused:
-                    paused = False
-                    time.sleep(1)
-                else:
-                    paused = True
-                    ReleaseKey(A)
-                    ReleaseKey(W)
-                    ReleaseKey(D)
-                    time.sleep(1)
+        if 'E' in keys:
+            if paused:
+                paused = False
+                print('Unpaused!')
+                time.sleep(1)
+            else:
+                print('Pausing!')
+                paused = True
+                ReleaseKey(A)
+                ReleaseKey(W)
+                ReleaseKey(D)
+                time.sleep(1)
 
 
 main()
