@@ -28,4 +28,4 @@ If you wish, you can run '1.2 check_data.py' to see the amount of original train
 
 Feel free to pull request or make changes according to your convinience. You can even tweak the codes such that it runs for any game you like. I didn't include my training data and trained model as I want you to use this neural network to play any game that you like. I would also suggest you to start with rather simple inputs, than complicated keypresses, as you need to have a lot of training data and balance it such that each and every input has the same number of frames as training data.
 
-![](test.gif)
+![](nfs.gif)
