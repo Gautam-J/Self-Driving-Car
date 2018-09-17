@@ -1,4 +1,4 @@
-# Need For Speed
+# Self Driving Car
 
 This project uses convolutional neural network to automatically play a game (in my case, driving a car in Need For Speed). It captures the frames of the game you play along with what input you give, i.e., what keypresses you make to play the game. For eg, in my case, I gave W, A, S, and D (to drive the car). The program then balances the data, such that the number of frames for a given input in training data is same. For eg, 5000 frames to which you pressed 'W', i.e., drove forward, 5000 frames to which you pressed 'A', and 5000 frames to which you pressed 'D'. Then, we shuffle the data. We don't have to worry because the input you give and the frame for which you gave the input will not get shuffled. Instead, they will get shuffled together, as a whole.We then give the now balanced and shuffled training data to a model, train it, and finally test it.
 
