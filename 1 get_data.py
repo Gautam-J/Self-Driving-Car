@@ -65,7 +65,8 @@ def main():
             training_data.append([screen, minimap, output])
 
             # prints the size of the object every often so that RAM doesn't filled up
-            if len(training_data) % 500 == 0:
+            # saves the training data file every 1000 frames collected
+            if len(training_data) % 1000 == 0:
                 print('Saving data...')
                 np.save(file_name, training_data)
                 print(f'Saved {file_name} successfully!')
