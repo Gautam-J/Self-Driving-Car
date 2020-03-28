@@ -5,6 +5,7 @@ from grabscreen import grab_screen
 from getkeys import key_check
 from countdown import CountDown
 import os
+import psutil
 
 '''
 Run this script to get training data. The script captures the frame image of
@@ -63,13 +64,14 @@ def main():
             output = keys_to_output(keys)
             training_data.append([screen, minimap, output])
 
-            # we save the data every 500 frames collected.
+            # prints the size of the object every often so that RAM doesn't filled up
             if len(training_data) % 500 == 0:
-                print('New Training Data: ' + str(len(training_data)))
-                print('Saving Data!')
+                print('Saving data...')
                 np.save(file_name, training_data)
-                print('Data saved succesfully! You can quit now.')
-                print('Capturing data!')
+                print(f'Saved {file_name} successfully!')
+                print(f'System Memory Usage: {psutil.virtual_memory().percent} %')
+                print(f'New Training Data: {len(training_data)} frames')
+                print('-' * 80)
 
         keys = key_check()
 
@@ -98,7 +100,7 @@ file_name = 'data\\training_data_{}.npy'.format(n)
 
 if os.path.isfile(file_name):
     print('File exists, loading previous data!')
-    training_data = list(np.load(file_name))
+    training_data = list(np.load(file_name, allow_pickle=True))
 else:
     print('File does not exist, starting fresh!')
     training_data = []
