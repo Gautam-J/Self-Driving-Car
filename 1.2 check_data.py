@@ -11,15 +11,11 @@ data along with the number of each label's occurence.
 n = int(input('Enter the batch number, 0 for final data: '))
 
 if n == 0:
+    if os.path.isfile('final_data.npy'):
+        train_data = np.load('final_data.npy', allow_pickle=True)
+        print(f'Total amount of frames collected: {len(train_data)}')
 
-    train_data = 'final_data.npy'.format(n)
-
-    if os.path.isfile(train_data):
-        train_data_2 = np.load(train_data)
-
-        print('Final Data: ' + str(len(train_data_2)))
-        df = pd.DataFrame(train_data_2)
-
+        df = pd.DataFrame(train_data)
         print(df.head())
         print('\n')
         print(Counter(df[1].apply(str)))
@@ -27,25 +23,23 @@ if n == 0:
         print('Final data does not exist.')
 
 else:
-
-    train_data = 'training_data_{}.npy'.format(n)
-
+    train_data = 'data\\training_data_{}.npy'.format(n)
     if os.path.isfile(train_data):
-        train_data_2 = np.load(train_data)
+        train_data_2 = np.load(train_data, allow_pickle=True)
 
         print('Unbalanced Raw Data: ' + str(len(train_data_2)))
         df = pd.DataFrame(train_data_2)
 
         print(df.head())
         print('\n')
-        print(Counter(df[1].apply(str)))
+        print(Counter(df[2].apply(str)))
 
         print('\n')
 
-        train_data_bal = 'training_data_{}_balanced.npy'.format(n)
+        train_data_bal = 'data\\training_data_{}_balanced.npy'.format(n)
 
         if os.path.isfile(train_data_bal):
-            train_data_3 = np.load(train_data_bal)
+            train_data_3 = np.load(train_data_bal, allow_pickle=True)
 
             print('New Balanced Data: ' + str(len(train_data_3)))
             df = pd.DataFrame(train_data_3)
