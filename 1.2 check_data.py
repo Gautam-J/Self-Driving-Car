@@ -18,7 +18,7 @@ if n == 0:
         df = pd.DataFrame(train_data)
         print(df.head())
         print('\n')
-        print(Counter(df[1].apply(str)))
+        print(Counter(df[2].apply(str)))
     else:
         print('Final data does not exist.')
 
@@ -46,7 +46,7 @@ else:
 
             print(df.head())
             print('\n')
-            print(Counter(df[1].apply(str)))
+            print(Counter(df[2].apply(str)))
 
         else:
             print('Balanced data file does not exist.')
