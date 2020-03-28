@@ -41,7 +41,7 @@ class MyHistory(Callback):
         self.val_loss.append(logs.get('val_loss'))
 
     def on_train_end(self, logs={}):
-        self.model.save(f'{self.model_name}-model_from_callback.h5')
+        self.model.save(f'{self.model_name}model_from_callback.h5')
         self.plot_training_history()
 
     def plot_training_history(self):
@@ -77,5 +77,4 @@ class MyHistory(Callback):
         plt.ylabel('Loss')
         plt.legend()
 
-        plt.savefig(f'{self.model_name}-history.png')
-        plt.show()
+        plt.savefig(f'{self.model_name}history.png')

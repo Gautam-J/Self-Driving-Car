@@ -1,34 +1,68 @@
+import os
+import time
 import numpy as np
-from alexnet import alexnet
+from drivenet import DriveNet
+from myhistory import MyHistory
 from sklearn.model_selection import train_test_split
+from tensorflow.keras.callbacks import EarlyStopping
 
-'''
-We now feed our training data into a CNN. We use 'Alexnet' as our model.
-We use a for loop for specifing epochs as we want to save the model after
-every epoch.
-'''
+BASE_DIR = f'models\\{int(time.time())}'
+if not os.path.exists(BASE_DIR):
+    os.makedirs(BASE_DIR)
 
-MODEL_NAME = 'nfs-final.model'
+data = np.load('data\\final_data.npy', allow_pickle=True)
 
-model = alexnet(height=56, width=86, lr=0.001, channel=1, output=3)
-train = np.load('final_data.npy')
+screen, minimap, choice = [], [], []
 
-X = np.array([i[0] for i in train]).reshape(-1, 86, 56, 1)
-Y = [i[1] for i in train]
+for i in data:
+    screen.append(i[0])
+    minimap.append(i[1])
+    choice.append(i[2])
 
-train_x, test_x, train_y, test_y = train_test_split(X, Y, test_size=0.1,
-                                                    random_state=42)
+data = train_test_split(screen, minimap, choice, test_size=0.2, random_state=42)
+screen_train, screen_test, minimap_train, minimap_test, y_train, y_test = data
 
-for i in range(15):
+screen_train = np.array(screen_train, dtype=np.float32)
+screen_test = np.array(screen_test, dtype=np.float32)
+minimap_train = np.array(minimap_train, dtype=np.float32).reshape(-1, 50, 50, 1)
+minimap_test = np.array(minimap_test, dtype=np.float32).reshape(-1, 50, 50, 1)
+y_train = np.array(y_train, dtype=np.float32)
+y_test = np.array(y_test, dtype=np.float32)
 
-    model.fit({'input': train_x}, {'targets': train_y}, n_epoch=1,
-              validation_set=({'input': test_x}, {'targets': test_y}),
-              snapshot_step=500, show_metric=True, run_id=MODEL_NAME)
+screen_train *= 1 / 255.
+screen_test *= 1 / 255.
+minimap_train *= 1 / 255.
+minimap_test *= 1 / 255.
 
-    model.save(MODEL_NAME)
-    print('Saved epoch:', i+1)
+# print(screen_train.shape)
+# print(screen_test.shape)
+# print(minimap_train.shape)
+# print(minimap_test.shape)
+# print(y_train.shape)
+# print(y_test.shape)
 
-# use the code in the next line in cmd to initiate tensorboard.
-# tensorboard --logdir="log"
-# or
-# python -m tensorboard.main --logdir="log"
+model = DriveNet()
+model.compile(loss='categorical_crossentropy', optimizer='adam',
+              metrics=['accuracy'])
+
+es = EarlyStopping(monitor='val_loss', patience=3, restore_best_weights=True)
+mh = MyHistory(model_name=f'{BASE_DIR}\\', win_size=32)
+
+model.fit(x=[screen_train, minimap_train], y=y_train,
+          epochs=5, batch_size=32, verbose=1, callbacks=[es, mh],
+          validation_split=0.2)
+
+model.save(f'{BASE_DIR}\\model.h5')
+model.save_weights(f'{BASE_DIR}\\weights.h5')
+
+json_config = model.to_json(indent=4)
+with open(f'{BASE_DIR}\\model_config.json', 'w') as f:
+    f.write(json_config)
+
+print('Model saved.')
+loss, acc = model.evaluate([screen_test, minimap_test], y_test, verbose=0)
+print('Results on test set...')
+print(f'Loss: {loss:0.3f} Accuracy: {acc:0.3f}')
+
+os.rename(BASE_DIR, f'{BASE_DIR}_{loss:0.3f}_{acc:0.3f}')
+print('DONE')

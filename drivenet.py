@@ -11,8 +11,8 @@ Variational End-to-End Navigation and Localization
 
 
 def DriveNet():
-    minimap_input = Input(shape=(50, 50, 1))
     screen_input = Input(shape=(80, 200, 3))
+    minimap_input = Input(shape=(50, 50, 1))
 
     screen = Conv2D(filters=24, kernel_size=5, strides=2, activation='relu')(screen_input)
     screen = Conv2D(filters=36, kernel_size=5, strides=2, activation='relu')(screen)
@@ -25,14 +25,14 @@ def DriveNet():
     minimap = Conv2D(filters=48, kernel_size=3, strides=2, activation='relu')(minimap)
     minimap = Flatten()(minimap)
 
-    merged = Concatenate()([minimap, screen])
+    merged = Concatenate()([screen, minimap])
 
     x = Dense(1000, activation='relu')(merged)
     x = Dense(100, activation='relu')(x)
     output = Dense(3, activation='softmax')(x)
 
     # minimap is the first input, followed by screen
-    model = Model(inputs=[minimap_input, screen_input], outputs=output)
+    model = Model(inputs=[screen_input, minimap_input], outputs=output)
 
     return model
 
