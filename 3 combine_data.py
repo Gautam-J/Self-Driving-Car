@@ -19,6 +19,6 @@ for i in range(n):
 shuffle(final)
 print('Data Shuffled!')
 
-np.save('final_data.npy', final)
+np.save('data\\final_data.npy', final)
 print('Saved!')
 print(f'Total number of frames collected: {len(final)}')

@@ -11,8 +11,8 @@ data along with the number of each label's occurence.
 n = int(input('Enter the batch number, 0 for final data: '))
 
 if n == 0:
-    if os.path.isfile('final_data.npy'):
-        train_data = np.load('final_data.npy', allow_pickle=True)
+    if os.path.isfile('data\\final_data.npy'):
+        train_data = np.load('data\\final_data.npy', allow_pickle=True)
         print(f'Total amount of frames collected: {len(train_data)}')
 
         df = pd.DataFrame(train_data)
