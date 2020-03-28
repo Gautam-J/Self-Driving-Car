@@ -3,12 +3,13 @@ import cv2
 import time
 from grabscreen import grab_screen
 from getkeys import key_check
+from countdown import CountDown
 import os
 
 '''
 Run this script to get training data. The script captures the frame image of
-the game, along with the button you press for that corresponding frame, i.e.,
-whether you drive straight, left, or right.
+the main screen and the mini map, along with the button you press for that corresponding frame,
+i.e., whether you drive straight, left, or right.
 
 Since numpy arrays can become huge files, it's best to collect your data in
 batches. If the length of data becomes greater than 100k (or until the script
@@ -28,34 +29,18 @@ def keys_to_output(keys):
     right = [0, 0, 1]
     '''
 
-    output = [0, 0, 0]
-
     if 'A' in keys:
-        output[0] = 1
+        output = [1, 0, 0]
     elif 'D' in keys:
-        output[2] = 1
+        output = [0, 0, 1]
     else:
-        output[1] = 1
+        output = [0, 1, 0]
 
     return output
 
 
-# enter batch number(start from 1 and go on as you wish)
-n = int(input('Enter the batch number: '))
-file_name = 'training_data_{}.npy'.format(n)
-
-if os.path.isfile(file_name):
-    print('File exists, loading previous data!')
-    training_data = list(np.load(file_name))
-else:
-    print('File does not exist, starting fresh!')
-    training_data = []
-
-
 def main():
-    for i in list(range(5))[::-1]:
-        print(i + 1)
-        time.sleep(1)
+    CountDown(5)
 
     if os.path.isfile(file_name):
         print('Existing Training Data:' + str(len(training_data)))
@@ -67,13 +52,16 @@ def main():
     while True:
 
         if not paused:
-            screen = grab_screen(region=(40, 250, 860, 560))
-            screen = cv2.resize(screen, (86, 56))
-            screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
+            screen = grab_screen(region=(270, 250, 650, 450))
+            minimap = grab_screen(region=(70, 360, 260, 520))
+            screen = cv2.resize(screen, (200, 80))
+            screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
+            minimap = cv2.resize(minimap, (50, 50))
+            minimap = cv2.cvtColor(minimap, cv2.COLOR_BGR2GRAY)
 
             keys = key_check()
             output = keys_to_output(keys)
-            training_data.append([screen, output])
+            training_data.append([screen, minimap, output])
 
             # we save the data every 500 frames collected.
             if len(training_data) % 500 == 0:
@@ -100,5 +88,19 @@ def main():
                 print('Paused!')
                 time.sleep(1)
 
+
+if not os.path.exists('data'):
+    os.makedirs('data')
+
+# enter batch number(start from 1 and go on as you wish)
+n = int(input('Enter the batch number: '))
+file_name = 'data\\training_data_{}.npy'.format(n)
+
+if os.path.isfile(file_name):
+    print('File exists, loading previous data!')
+    training_data = list(np.load(file_name))
+else:
+    print('File does not exist, starting fresh!')
+    training_data = []
 
 main()
