@@ -1,31 +1,84 @@
 # Self Driving Car
 
-![](nfs.gif)
+> This project is mainly focused on End-to-End Deep Learning for Self-Driving-Cars. Uses raw image data, and a convolutional neural network to drive a car autonomously in Need For Speed game.
 
-This project uses convolutional neural network to automatically play a game (in my case, driving a car in Need For Speed). It captures the frames of the game you play along with what input you give, i.e., what keypresses you make to play the game. For eg, in my case, I gave W, A, S, and D (to drive the car). The program then balances the data, such that the number of frames for a given input in training data is same. For eg, 5000 frames to which you pressed 'W', i.e., drove forward, 5000 frames to which you pressed 'A', and 5000 frames to which you pressed 'D'. Then, we shuffle the data. We don't have to worry because the input you give and the frame for which you gave the input will not get shuffled. Instead, they will get shuffled together, as a whole.We then give the now balanced and shuffled training data to a model, train it, and finally test it.
+## Sections:
+* [What's New](#changelog)
+* [Demo](#demo)
+* [Installation](#installation)
+* [Working](#working)
+* [DriveNet](#DriveNet)
+* [Citations](#citations)
 
-Run Need For Speed Most Wanted (old version) (or any game for that matter) in a windowed mode with dimensions 50, 50, 800, 500. (You could use DxWnd)
+---
+## Changelog
+Version 2.0
+* Updated from tflearn to tensorflow 2.0
+* Updated from alexnet to new architecture.
+* Using minimap also as an input, along with road images.
 
-Run Python scripts as numbered. Make sure your python IDLE/CMD is only on the right side of your screen.
+## Demo
+![demo](nfs.gif)
 
-We run '1 get_data.py' to capture the screen and input data. Game needs to be open, and you need to play the game(how you want the neural network to play).
+## Installation
+Copy and paste the below code in a terminal/cmd open inside the repository folder.
 
-We use the captured data as training data for our convolutional neural network.
+`python -m pip install --user --requirement requirements.txt`
 
-We have a new file - training_data_{batch number}.npy
+More specifically, all required modules (except the built-ins) are listed below.
+```
+opencv-python
+numpy
+psutil
+pandas
+sklearn
+tensorflow
+matplotlib
+```
 
-We run '2 balance_data.py' to balance the data to make sure we don't over fit. Game need not be open.
+## Working
+1. Visualizing Region of Interest - to make sure that we are capturing the areas that we want and nothing extra.
+    * [Visualize screen](visualize_screen.py) can be used to see the area of the road that is being captured when recording training data.
+    * [Visualize map](visualize_map.py) can be used to see the area of the minimap that is located in the bottom-left corner, that is captured when recording training data.
 
-We have a new file - training_data_{batch number}_{balanced}.npy
+1. Getting Training Data - capturing raw frames along with player's inputs.
+    * [Get data](get_data.py) is used to capture the ROI found in step 1. We capture both the road and the minimap per observation as features, along with the player's input as label.
+    * The captured road frame is resized to (80, 200, 3)
+    * The captured minimap frame is resized to (50, 50, 1)
 
-We run '3 combine_data.py' to combine all our mini-batch files into one single file.
+1. Balancing the data - The raw data is balanced to avoid bias.
+    * [Balance data](balance_data.py) removes the unwanted bias in the training data.
+    * The raw data has most of the observations with labels for _forward_ with few observations with labels for _left_ or _right_.
+    * We thus discard the excess amount of unwanted data that has label as _forward_. Keep in mind that we do __lose a lot of data__.
 
-We have a new file - 'final_data.npy'
+1. Combining the data - The balanced files can now be joined together to form one final data file.
+    * [Combine data](combine_data.py) is used to join all balanced data for easier loading of data during training process.
+    * All batches of balanced data is now combined together to form _final\_data.npy_ file.
+    * This file has 2 images as features, with shape (80, 200, 3) and (50, 50, 1), respectively, and a one-hot-encoded label with 3 classes.
 
-We run '4 train_model.py' to train our model using training_data_v2.npy Game need not be open.
+1. Training the Neural Network - [DriveNet](#drivenet) is used as the convolutional neural network.
+    * [Train model](train_model.py) is used to train the network over a max of 100 epochs.
+    * Training is regulated by EarlyStopping Callback, monitoring validation_loss with a patience of 3 epochs.
+    * Adam optimizer is used, with learning rate set to 0.001
 
-We run '5 test_model.py' to test our trained model. Game needs to be open and selected after running '5 test_model.py'. Wait for the countdown, and your car should drive automatically.
+1. Testing the model - Final testing done in the game.
+    * [Test model](test_model.py) is used to actually run the trained model and control the car real-time.
 
-If you wish, you can run '1.2 check_data.py' to see the amount of original training data and the amount of training data you give to the neural network, since a significant amount of data will be lost during balancing (in fact, that is why we balance, to make sure that the game inputs are all even and not one input is more than or less than others).
+## DriveNet
+Graph of [DriveNet](drivenet.py), rendered using plot_model function.
 
-Feel free to pull request or make changes according to your convinience. You can even tweak the codes such that it runs for any game you like. I didn't include my training data and trained model as I want you to use this neural network to play any game that you like. I would also suggest you to start with rather simple inputs, than complicated keypresses, as you need to have a lot of training data and balance it such that each and every input has the same number of frames as training data.
+![Image](DriveNet.png)
+
+* input_1 is the road image
+* input_2 is the minimap image
+* dense_2 is the output layer, which returns the probability of the car turning left, right or just go straight ahead.
+* **NOTE:** This architecture is heavily inspired by the paper "Variational End-to-End Navigation and Localization" by Alexander Amini and others. Refer to the [citation](#citation) section for more details.
+
+## Citations
+1. [MIT - Intro to Deep Learning Course](https://introtodeeplearning.com/ "Go to HomePage")
+1. [Variational End-to-End Navigation and Localization](https://arxiv.org/abs/1811.10119v2 "Go to arxiv page")
+1. [Sentex's Python Plays GTA-V](https://github.com/Sentdex/pygta5 "Go to GitHub")
+1. [Box of Hats](https://github.com/Box-Of-Hats "Github") - [getkeys.py](getkeys.py)
+
+---
+Open to suggestions. Feel free to fork this repository. If you would to use some code from here, please do give the required citations and references.

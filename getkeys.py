@@ -1,5 +1,3 @@
-# Citation: Box Of Hats (https://github.com/Box-Of-Hats )
-
 import win32api as wapi
 
 keyList = ["\b"]
