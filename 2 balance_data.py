@@ -15,52 +15,54 @@ for all your training batches.
 '''
 
 # enter 1, then run the script again and enter 2, and keep incrementing it.
-n = int(input("Enter the batch number: "))
-train_data = np.load('data\\training_data_{}.npy'.format(n), allow_pickle=True)
+max_batch = int(input("Enter the maximum batch number: "))
 
-print(f'Frames collected: {len(train_data)}')
-df = pd.DataFrame(train_data)
-print(df.head())
-print('\n')
-print(Counter(df[2].apply(str)))
-print('\n')
+for n in range(1, max_batch + 1):
+    train_data = np.load('data\\training_data_{}.npy'.format(n), allow_pickle=True)
 
-lefts = []
-rights = []
-forwards = []
+    print(f'Frames collected for batch {n}: {len(train_data)}')
+    df = pd.DataFrame(train_data)
+    print(df.head())
+    print('\n')
+    print(Counter(df[2].apply(str)))
+    print('\n')
 
-for data in train_data:
-    screen = data[0]
-    minimap = data[1]
-    choice = data[2]
+    lefts = []
+    rights = []
+    forwards = []
 
-    if choice == [1, 0, 0]:
-        lefts.append([screen, minimap, choice])
-    elif choice == [0, 1, 0]:
-        forwards.append([screen, minimap, choice])
-    elif choice == [0, 0, 1]:
-        rights.append([screen, minimap, choice])
+    for data in train_data:
+        screen = data[0]
+        minimap = data[1]
+        choice = data[2]
+
+        if choice == [1, 0, 0]:
+            lefts.append([screen, minimap, choice])
+        elif choice == [0, 1, 0]:
+            forwards.append([screen, minimap, choice])
+        elif choice == [0, 0, 1]:
+            rights.append([screen, minimap, choice])
+        else:
+            print('no matches!!!')
+
+    if len(lefts) > len(rights):
+        forwards = forwards[:len(rights)]
     else:
-        print('no matches!!!')
+        forwards = forwards[:len(lefts)]
 
-if len(lefts) > len(rights):
-    forwards = forwards[:len(rights)]
-else:
-    forwards = forwards[:len(lefts)]
+    lefts = lefts[:len(forwards)]
+    rights = rights[:len(forwards)]
 
-lefts = lefts[:len(forwards)]
-rights = rights[:len(forwards)]
+    final_data = forwards + lefts + rights
+    shuffle(final_data)
 
-final_data = forwards + lefts + rights
-shuffle(final_data)
+    print(f'Balanced Data for batch {n}: {len(final_data)}')
 
-print(f'Balanced Data: {len(final_data)}')
+    df = pd.DataFrame(final_data)
+    print(df.head())
+    print('\n')
+    print(Counter(df[2].apply(str)))
 
-df = pd.DataFrame(final_data)
-print(df.head())
-print('\n')
-print(Counter(df[2].apply(str)))
-
-np.save('data\\training_data_{}_balanced.npy'.format(n), final_data)
-print('\n')
-print('Data Balanced and Saved!')
+    np.save('data\\training_data_{}_balanced.npy'.format(n), final_data)
+    print('\n')
+    print(f'Data Balanced and Saved for batch {n}!')
