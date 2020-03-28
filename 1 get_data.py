@@ -53,7 +53,7 @@ def main():
 
         if not paused:
             screen = grab_screen(region=(270, 250, 650, 450))
-            minimap = grab_screen(region=(70, 360, 260, 520))
+            minimap = grab_screen(region=(100, 390, 230, 490))
             screen = cv2.resize(screen, (200, 80))
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
             minimap = cv2.resize(minimap, (50, 50))

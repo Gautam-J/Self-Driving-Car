@@ -9,7 +9,7 @@ Make sure that your game window is seen by cv2.
 
 while True:
     # change the region=(x, y, width, height) according to your game window.
-    screen = grab_screen(region=(70, 360, 260, 520))
+    screen = grab_screen(region=(100, 390, 230, 490))
 
     # uncomment the next line to see the resized image to be inputed.
     screen = cv2.resize(screen, (50, 50))
