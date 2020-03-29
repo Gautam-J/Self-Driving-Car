@@ -11,6 +11,14 @@ Most of the code in this script was taken from Sentdex's Python plays GTA-V
 '''
 
 
+def roi(img, vertices):
+    mask = np.zeros_like(img)
+    cv2.fillPoly(mask, vertices, 255)
+    masked = cv2.bitwise_and(img, mask)
+
+    return masked
+
+
 def straight():
     print('straight')
     PressKey(W)
@@ -144,9 +152,12 @@ def preprocess_img(image):
     image = cv2.GaussianBlur(image, (3, 3), 0)
     # edge detection
     image = auto_canny(image)
+    # Masking Region of Interest
+    vertices = np.array([[0, 201], [0, 50], [381, 50], [381, 201]], np.int32)
+    image = roi(image, [vertices])
     # probabilistic hough transform
     lines = cv2.HoughLinesP(image, rho=1, theta=(np.pi / 180),
-                            threshold=5, minLineLength=50, maxLineGap=15)
+                            threshold=5, minLineLength=20, maxLineGap=5)
     m1 = 0
     m2 = 0
     # drawing lines
@@ -171,9 +182,9 @@ def preprocess_img(image):
 
 CountDown(5)
 while True:
-    screen = grab_screen(region=(270, 280, 650, 450))
+    screen = grab_screen(region=(270, 250, 650, 450))
     new_screen, original_image, m1, m2 = preprocess_img(screen)
-    cv2.imshow('window', new_screen)
+    # cv2.imshow('window', new_screen)
     cv2.imshow('window2', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
 
     if m1 < 0 and m2 < 0:
