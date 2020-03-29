@@ -24,7 +24,7 @@ def left():
     print('left')
     PressKey(W)
     PressKey(A)
-    time.sleep(0.1)
+    time.sleep(0.05)
     ReleaseKey(A)
 
 
@@ -32,7 +32,7 @@ def right():
     print('right')
     PressKey(W)
     PressKey(D)
-    time.sleep(0.1)
+    time.sleep(0.05)
     ReleaseKey(D)
 
 
@@ -61,19 +61,19 @@ def main():
             print(prediction)
             # prediction = np.array(prediction) * [0.009, 5, 0.009]
 
-            # if np.argmax(prediction) == 0:
-            #     left()
-            # elif np.argmax(prediction) == 1:
-            #     straight()
-            # elif np.argmax(prediction) == 2:
-            #     right()
-
-            if prediction[0] >= THRESHOLD:
+            if np.argmax(prediction) == 0:
                 left()
-            elif prediction[2] >= THRESHOLD:
-                right()
-            else:
+            elif np.argmax(prediction) == 1:
                 straight()
+            elif np.argmax(prediction) == 2:
+                right()
+
+            # if prediction[0] >= THRESHOLD:
+            #     left()
+            # elif prediction[2] >= THRESHOLD:
+            #     right()
+            # else:
+            #     straight()
 
         keys = key_check()
 
