@@ -144,7 +144,7 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
         pass
 
 
-def preprocess_img(image):
+def LaneFinder(image):
     org_image = image
     # convert to grayscale
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -180,20 +180,21 @@ def preprocess_img(image):
     return image, org_image, m1, m2
 
 
-CountDown(5)
-while True:
-    screen = grab_screen(region=(270, 250, 650, 450))
-    new_screen, original_image, m1, m2 = preprocess_img(screen)
-    # cv2.imshow('window', new_screen)
-    cv2.imshow('window2', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+if __name__ == '__main__':
+    CountDown(5)
+    while True:
+        screen = grab_screen(region=(270, 250, 650, 450))
+        new_screen, original_image, m1, m2 = LaneFinder(screen)
+        # cv2.imshow('window', new_screen)
+        # cv2.imshow('window2', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
 
-    if m1 < 0 and m2 < 0:
-        right()
-    elif m1 > 0 and m2 > 0:
-        left()
-    else:
-        straight()
+        if m1 < 0 and m2 < 0:
+            right()
+        elif m1 > 0 and m2 > 0:
+            left()
+        else:
+            straight()
 
-    if cv2.waitKey(25) == ord('q'):
-        cv2.destroyAllWindows()
-        break
+        if cv2.waitKey(25) == ord('q'):
+            cv2.destroyAllWindows()
+            break
