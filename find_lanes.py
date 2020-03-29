@@ -1,6 +1,50 @@
 import cv2
+import time
 import numpy as np
 from grabscreen import grab_screen
+from directkeys import PressKey, ReleaseKey
+from directkeys import W, A, D
+from countdown import CountDown
+
+'''
+Most of the code in this script was taken from Sentdex's Python plays GTA-V
+'''
+
+
+def straight():
+    print('straight')
+    PressKey(W)
+    ReleaseKey(A)
+    ReleaseKey(D)
+
+
+def left():
+    print('left')
+    PressKey(W)
+    PressKey(A)
+    time.sleep(0.05)
+    ReleaseKey(A)
+
+
+def right():
+    print('right')
+    PressKey(W)
+    PressKey(D)
+    time.sleep(0.05)
+    ReleaseKey(D)
+
+
+def auto_canny(image, sigma=0.33):
+    '''
+    Reference: https://www.pyimagesearch.com/
+    '''
+    v = np.median(image)
+    # apply automatic Canny edge detection using the computed median
+    lower = int(max(0, (1.0 - sigma) * v))
+    upper = int(min(255, (1.0 + sigma) * v))
+    edged = cv2.Canny(image, lower, upper)
+    # return the edged image
+    return edged
 
 
 def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
@@ -87,7 +131,7 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
         l1_x1, l1_y1, l1_x2, l1_y2 = average_lane(final_lanes[lane1_id])
         l2_x1, l2_y1, l2_x2, l2_y2 = average_lane(final_lanes[lane2_id])
 
-        return [l1_x1, l1_y1, l1_x2, l1_y2], [l2_x1, l2_y1, l2_x2, l2_y2]
+        return [l1_x1, l1_y1, l1_x2, l1_y2], [l2_x1, l2_y1, l2_x2, l2_y2], lane1_id, lane2_id
     except Exception:
         pass
 
@@ -97,15 +141,17 @@ def preprocess_img(image):
     # convert to grayscale
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # gaussian blur
-    image = cv2.GaussianBlur(image, (5, 5), 0)
+    image = cv2.GaussianBlur(image, (3, 3), 0)
     # edge detection
-    image = cv2.Canny(image, 150, 300)
+    image = auto_canny(image)
     # probabilistic hough transform
     lines = cv2.HoughLinesP(image, rho=1, theta=(np.pi / 180),
-                            threshold=20, minLineLength=20, maxLineGap=15)
+                            threshold=5, minLineLength=50, maxLineGap=15)
+    m1 = 0
+    m2 = 0
     # drawing lines
     try:
-        l1, l2 = draw_lanes(org_image, lines)
+        l1, l2, m1, m2 = draw_lanes(org_image, lines)
         cv2.line(org_image, (l1[0], l1[1]), (l1[2], l1[3]), [0, 255, 0], 3)
         cv2.line(org_image, (l2[0], l2[1]), (l2[2], l2[3]), [0, 255, 0], 3)
     except Exception:
@@ -120,15 +166,22 @@ def preprocess_img(image):
     except Exception:
         pass
 
-    return image, org_image
+    return image, org_image, m1, m2
 
 
+CountDown(5)
 while True:
-    # get roi
     screen = grab_screen(region=(270, 280, 650, 450))
-    new_screen, original_image = preprocess_img(screen)
+    new_screen, original_image, m1, m2 = preprocess_img(screen)
     cv2.imshow('window', new_screen)
     cv2.imshow('window2', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
+
+    if m1 < 0 and m2 < 0:
+        right()
+    elif m1 > 0 and m2 > 0:
+        left()
+    else:
+        straight()
 
     if cv2.waitKey(25) == ord('q'):
         cv2.destroyAllWindows()
