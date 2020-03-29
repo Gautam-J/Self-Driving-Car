@@ -6,7 +6,7 @@ from myhistory import MyHistory
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
 
-BASE_DIR = f'models\\{int(time.time())}'
+BASE_DIR = f'models\\DriveNet\\{int(time.time())}'
 if not os.path.exists(BASE_DIR):
     os.makedirs(BASE_DIR)
 

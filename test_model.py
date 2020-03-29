@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import time
-# from lanefinder import LaneFinder
+import winsound
 from grabscreen import grab_screen
 from getkeys import key_check
 from countdown import CountDown
@@ -25,7 +25,7 @@ def left():
     print('left')
     PressKey(W)
     PressKey(A)
-    time.sleep(0.05)
+    time.sleep(0.07)
     ReleaseKey(A)
 
 
@@ -33,7 +33,7 @@ def right():
     print('right')
     PressKey(W)
     PressKey(D)
-    time.sleep(0.05)
+    time.sleep(0.07)
     ReleaseKey(D)
 
 
@@ -42,13 +42,9 @@ def main():
 
     paused = False
     while True:
-
         if not paused:
             screen = grab_screen(region=(270, 250, 650, 450))
             minimap = grab_screen(region=(100, 390, 230, 490))
-
-            # lane finding
-            # _, _, m1, m2 = LaneFinder(screen)
 
             screen = cv2.resize(screen, (200, 80))
             screen = cv2.cvtColor(screen, cv2.COLOR_BGR2RGB)
@@ -61,9 +57,9 @@ def main():
             screen *= 1 / 255.
             minimap *= 1 / 255.
 
-            prediction = model.predict([screen, minimap])[0]
-            # print(prediction)
-            # print(m1, m2)
+            prediction = DriveNet.predict([screen, minimap])[0]
+            decoded = CrashNet.predict(screen)[0]
+            mse = np.mean((screen - decoded)**2)
 
             if np.argmax(prediction) == 0:
                 left()
@@ -72,12 +68,9 @@ def main():
             elif np.argmax(prediction) == 2:
                 right()
 
-            # if m1 < 0 and m2 < 0:
-            #     right()
-            # elif m1 > 0 and m2 > 0:
-            #     left()
-            # else:
-            #     straight()
+            if mse >= THRESHOLD:
+                print(f'WARNING! {mse:.4f}')
+                winsound.Beep(1000, 25)  # freq, duration
 
         keys = key_check()
 
@@ -95,10 +88,12 @@ def main():
                 time.sleep(1)
 
 
-MODEL_PATH = 'models\\1585417347_0.200_0.929\\model.h5'
-
-model = load_model(MODEL_PATH)
+DN_PATH = 'models\\DriveNet\\1585417347_0.200_0.929\\model.h5'
+DriveNet = load_model(DN_PATH)
+CN_PATH = 'models\\CrashNet\\1585479079_0.00607\\model.h5'
+CrashNet = load_model(CN_PATH)
 print('Model Loaded!')
+THRESHOLD = 0.007  # error above this will be considered as warning
 
 if __name__ == '__main__':
     main()
