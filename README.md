@@ -60,6 +60,7 @@ matplotlib
     * [Train model](train_model.py) is used to train the network over a max of 100 epochs.
     * Training is regulated by EarlyStopping Callback, monitoring validation_loss with a patience of 3 epochs.
     * Adam optimizer is used, with learning rate set to 0.001
+    * No data augmentation is done.
 
 1. Testing the model - Final testing done in the game.
     * [Test model](test_model.py) is used to actually run the trained model and control the car real-time.
