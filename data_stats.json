@@ -1,0 +1,148 @@
+{
+    "stats": [
+        {
+            "File Name": "batch_1",
+            "Left Count": 1457,
+            "Right Count": 1426,
+            "Straight Count": 22117,
+            "Total Count": 25000,
+            "File Size(MB)": 1265.98
+        },
+        {
+            "File Name": "batch_1_balanced",
+            "Left Count": 1426,
+            "Right Count": 1426,
+            "Straight Count": 1426,
+            "Total Count": 4278,
+            "File Size(MB)": 216.61
+        },
+        {
+            "File Name": "batch_2",
+            "Left Count": 1949,
+            "Right Count": 2048,
+            "Straight Count": 21003,
+            "Total Count": 25000,
+            "File Size(MB)": 1265.98
+        },
+        {
+            "File Name": "batch_2_balanced",
+            "Left Count": 1949,
+            "Right Count": 1949,
+            "Straight Count": 1949,
+            "Total Count": 5847,
+            "File Size(MB)": 296.06
+        },
+        {
+            "File Name": "batch_3",
+            "Left Count": 2091,
+            "Right Count": 2097,
+            "Straight Count": 24812,
+            "Total Count": 29000,
+            "File Size(MB)": 1468.55
+        },
+        {
+            "File Name": "batch_3_balanced",
+            "Left Count": 2091,
+            "Right Count": 2091,
+            "Straight Count": 2091,
+            "Total Count": 6273,
+            "File Size(MB)": 317.63
+        },
+        {
+            "File Name": "batch_4",
+            "Left Count": 1983,
+            "Right Count": 2170,
+            "Straight Count": 27847,
+            "Total Count": 32000,
+            "File Size(MB)": 1620.44
+        },
+        {
+            "File Name": "batch_4_balanced",
+            "Left Count": 1983,
+            "Right Count": 1983,
+            "Straight Count": 1983,
+            "Total Count": 5949,
+            "File Size(MB)": 301.22
+        },
+        {
+            "File Name": "batch_5",
+            "Left Count": 1236,
+            "Right Count": 1313,
+            "Straight Count": 22451,
+            "Total Count": 25000,
+            "File Size(MB)": 1265.85
+        },
+        {
+            "File Name": "batch_5_balanced",
+            "Left Count": 1236,
+            "Right Count": 1236,
+            "Straight Count": 1236,
+            "Total Count": 3708,
+            "File Size(MB)": 187.75
+        },
+        {
+            "File Name": "batch_6",
+            "Left Count": 1949,
+            "Right Count": 2026,
+            "Straight Count": 21025,
+            "Total Count": 25000,
+            "File Size(MB)": 1265.97
+        },
+        {
+            "File Name": "batch_6_balanced",
+            "Left Count": 1949,
+            "Right Count": 1949,
+            "Straight Count": 1949,
+            "Total Count": 5847,
+            "File Size(MB)": 296.06
+        },
+        {
+            "File Name": "batch_7",
+            "Left Count": 1652,
+            "Right Count": 1622,
+            "Straight Count": 21726,
+            "Total Count": 25000,
+            "File Size(MB)": 1265.88
+        },
+        {
+            "File Name": "batch_7_balanced",
+            "Left Count": 1622,
+            "Right Count": 1622,
+            "Straight Count": 1622,
+            "Total Count": 4866,
+            "File Size(MB)": 246.38
+        },
+        {
+            "File Name": "batch_8",
+            "Left Count": 1374,
+            "Right Count": 1293,
+            "Straight Count": 23333,
+            "Total Count": 26000,
+            "File Size(MB)": 1316.59
+        },
+        {
+            "File Name": "batch_8_balanced",
+            "Left Count": 1293,
+            "Right Count": 1293,
+            "Straight Count": 1293,
+            "Total Count": 3879,
+            "File Size(MB)": 196.41
+        },
+        {
+            "File Name": "Total Raw Data",
+            "Left Count": 13691,
+            "Right Count": 13995,
+            "Straight Count": 184314,
+            "Total Count": 212000,
+            "File Size(MB)": 10735.24
+        },
+        {
+            "File Name": "Final Data",
+            "Left Count": 13549,
+            "Right Count": 13549,
+            "Straight Count": 13549,
+            "Total Count": 40647,
+            "File Size(MB)": 2058.24
+        }
+    ]
+}
