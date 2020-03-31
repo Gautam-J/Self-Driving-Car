@@ -88,12 +88,12 @@ def main():
                 time.sleep(1)
 
 
-DN_PATH = 'models\\DriveNet\\1585417347_0.200_0.929\\model.h5'
+DN_PATH = 'models\\DriveNet\\1585672804_0.164_0.943\\model.h5'
 DriveNet = load_model(DN_PATH)
-CN_PATH = 'models\\CrashNet\\1585479079_0.00607\\model.h5'
+CN_PATH = 'models\\CrashNet\\1585673812_0.00507\\model.h5'
 CrashNet = load_model(CN_PATH)
 print('Model Loaded!')
-THRESHOLD = 0.007  # error above this will be considered as warning
+THRESHOLD = 0.006  # error above this will be considered as warning
 
 if __name__ == '__main__':
     main()
