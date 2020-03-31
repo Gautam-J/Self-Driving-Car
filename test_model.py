@@ -25,7 +25,7 @@ def left():
     print('left')
     PressKey(W)
     PressKey(A)
-    time.sleep(0.07)
+    time.sleep(0.1)
     ReleaseKey(A)
 
 
@@ -33,7 +33,7 @@ def right():
     print('right')
     PressKey(W)
     PressKey(D)
-    time.sleep(0.07)
+    time.sleep(0.1)
     ReleaseKey(D)
 
 
@@ -69,7 +69,7 @@ def main():
                 right()
 
             if mse >= THRESHOLD:
-                print(f'WARNING! {mse:.4f}')
+                print(f'WARNING! MSE:{mse:.4f}')
                 winsound.Beep(1000, 25)  # freq, duration
 
         keys = key_check()
@@ -93,7 +93,7 @@ DriveNet = load_model(DN_PATH)
 CN_PATH = 'models\\CrashNet\\1585673812_0.00507\\model.h5'
 CrashNet = load_model(CN_PATH)
 print('Model Loaded!')
-THRESHOLD = 0.006  # error above this will be considered as warning
+THRESHOLD = 0.0095  # error above this will be considered as warning
 
 if __name__ == '__main__':
     main()
