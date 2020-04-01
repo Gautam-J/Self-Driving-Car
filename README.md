@@ -1,6 +1,6 @@
 # Self Driving Car
 
-> This project is mainly focused on End-to-End Deep Learning for Self-Driving-Cars. Uses raw image data, and a convolutional neural network to drive a car autonomously in Need For Speed game.
+> This project is mainly focused on End-to-End Deep Learning for Self-Driving-Cars. Uses raw image data, a convolutional neural network, and an autoencoder for autonomous driving in Need For Speed Most Wanted (2005) v1.3 game.
 
 ## Sections:
 * [What's New](#changelog)
@@ -8,12 +8,15 @@
 * [Installation](#installation)
 * [Working](#working)
 * [DriveNet](#DriveNet)
+* [CrashNet](#CrashNet)
+* [LaneFinder](#Lanefinder)
 * [Citations](#citations)
+* [Todo](#todo)
 
 ---
 ## Changelog
 Version 2.0
-* Updated from tflearn to tensorflow 2.0
+* Updated from tflearn to Keras API on top of tensorflow 2.0
 * Updated from alexnet to new architecture.
 * Using minimap also as an input, along with road images.
 
@@ -21,11 +24,9 @@ Version 2.0
 ![demo](nfs.gif)
 
 ## Installation
-Copy and paste the below code in a terminal/cmd open inside the repository folder.
-
 `python -m pip install --user --requirement requirements.txt`
 
-More specifically, all required modules (except the built-ins) are listed below.
+All required modules (except the built-ins) are listed below.
 ```
 opencv-python
 numpy
@@ -56,30 +57,53 @@ matplotlib
     * All batches of balanced data is now combined together to form _final\_data.npy_ file.
     * This file has 2 images as features, with shape (80, 200, 3) and (50, 50, 1), respectively, and a one-hot-encoded label with 3 classes.
 
-1. Training the Neural Network - [DriveNet](#drivenet) is used as the convolutional neural network.
-    * [Train model](train_model.py) is used to train the network over a max of 100 epochs.
+1. Training the Neural Network - [DriveNet](#drivenet) is used as the convolutional neural network for autonomous driving. [CrashNet](#crashnet), an autoencoder, is used to for anomaly detection during autonomous driving.
+    * [Train model](train_model.py) is used to train DriveNet over a max of 100 epochs.
+    * [Train CrashNet](train_crashnet.py) is used to train CrashNet.
     * Training is regulated by EarlyStopping Callback, monitoring validation_loss with a patience of 3 epochs.
     * Adam optimizer is used, with learning rate set to 0.001
     * No data augmentation is done.
 
 1. Testing the model - Final testing done in the game.
-    * [Test model](test_model.py) is used to actually run the trained model and control the car real-time.
+    * [Test model](test_model.py) is used to actually run the trained model and control the car real-time. For CrashNet, a threshold of 0.0095 is used for anomaly detection. (Reconstruction loss - Mean Squared Error)
 
 ## DriveNet
 Graph of [DriveNet](drivenet.py), rendered using plot_model function.
 
 ![Image](DriveNet.png)
 
-* input_1 is the road image
-* input_2 is the minimap image
-* dense_2 is the output layer, which returns the probability of the car turning left, right or just go straight ahead.
-* **NOTE:** This architecture is heavily inspired by the paper "Variational End-to-End Navigation and Localization" by Alexander Amini and others. Refer to the [citation](#citation) section for more details.
+* **NOTE:** This architecture is heavily inspired by the paper "Variational End-to-End Navigation and Localization" by Alexander Amini and others. Refer to the [citation](#citations) section for more details.
+
+## CrashNet
+Graph of [CrashNet](crashnet.py), rendered using plot_model function.
+
+![Image](CrashNet_autoencoder.png)
+
+## LaneFinder
+Pipeline is as follows:
+* Convert image to grayscale
+* Apply Gaussian Blur
+* Canny Edge Detection (threshold values calculated automatically)
+* Masking region of interest
+* Probabilistic Hough Transform
+* Selecting 2 lines(lanes) averaged over
+    * If both lines have negative slope, go right
+    * If both lines have positive slope, go left
+    * If both lines have different slope, go straight
+
+**NOTE:** This pipeline is almost similar to the one used in Sentdex's Python plays GTA-V. Refer to the [citations](#citations) section for more details.
 
 ## Citations
 1. [MIT - Intro to Deep Learning Course](https://introtodeeplearning.com/ "Go to HomePage")
 1. [Variational End-to-End Navigation and Localization](https://arxiv.org/abs/1811.10119v2 "Go to arxiv page")
 1. [Sentex's Python Plays GTA-V](https://github.com/Sentdex/pygta5 "Go to GitHub")
-1. [Box of Hats](https://github.com/Box-Of-Hats "Github") - [getkeys.py](getkeys.py)
+1. [AlexNet](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf "Go to pdf")
+
+## Todo
+* Use .hdf5 files instead of .npy files for better memory utilization.
+    * Switch to PyTorch if dealing with .hdf5 datasets.
+* Implement some sort of reinforcement learning algorithm to avoid collecting data.
+* Merge LaneFinder, DriveNet and CrashNet for better driving.
 
 ---
 Open to suggestions. Feel free to fork this repository. If you would to use some code from here, please do give the required citations and references.

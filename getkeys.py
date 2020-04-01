@@ -1,5 +1,9 @@
 import win32api as wapi
 
+'''
+Reference: https://github.com/Box-Of-Hats
+'''
+
 keyList = ["\b"]
 for char in "ABCDEFGHIJKLMNOPQRSTUVWXYZ 123456789,.'£$/\\":
     keyList.append(char)
