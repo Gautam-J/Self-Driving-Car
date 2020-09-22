@@ -104,6 +104,13 @@ Pipeline is as follows:
     * Switch to PyTorch if dealing with .hdf5 datasets.
 * Implement some sort of reinforcement learning algorithm to avoid collecting data.
 * Merge LaneFinder, DriveNet and CrashNet for better driving.
+* Carla
+* TORCS
+* VDrift
+* Beam.ng
+* Add a control filter for the output, maybe a low pass filter
+* Vagrant multiple VM - run the game with different camera views
+* Use a cheat engine that tracks car's relative position, speed, angle, etc.
 
 ---
 Open to suggestions. Feel free to fork this repository. If you would to use some code from here, please do give the required citations and references.
