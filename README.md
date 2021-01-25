@@ -21,6 +21,8 @@ Version 2.0
 * Using minimap also as an input, along with road images.
 
 ## Demo
+Link to Reddit Post: [Click here](https://www.reddit.com/r/Python/comments/iwt09a/endtoend_self_driving_car_need_for_speed/?utm_source=share&utm_medium=web2x&context=3)
+
 ![demo](nfs.gif)
 
 ## Installation
