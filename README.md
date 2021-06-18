@@ -114,6 +114,7 @@ Pipeline is as follows:
 * Vagrant multiple VM - run the game with different camera views
 * Use a cheat engine that tracks car's relative position, speed, angle, etc.
 * Have analog control with a PID controller
+* Have a pre-trained depth estimator model, use the depth map as features, and keypresses as labels.
 
 ---
 Open to suggestions. Feel free to fork this repository. If you would to use some code from here, please do give the required citations and references.
